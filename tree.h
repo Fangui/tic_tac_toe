@@ -5,9 +5,8 @@
 
 struct tree
 {
-  struct Tuple *Tuple;
   double value;
-  size_t nbChildren;
+  size_t nbChildren, t1, t2;
   struct tree **children;
 };
 

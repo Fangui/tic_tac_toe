@@ -59,8 +59,8 @@ void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt)
   for(size_t i = 0; i < tree->nbChildren; ++i)
   {
     struct matrix *clone = cloneMat(mat);
-    clone->data[tree->children[i]->Tuple->t1 * clone->cols + tree->children[i]->Tuple->t2] = player;
-    if(is_Finish(clone, player, tree->children[i]->Tuple->t1, tree->children[i]->Tuple->t2))
+    clone->data[tree->children[i]->t1 * clone->cols + tree->children[i]->t2] = player;
+    if(is_Finish(clone, player, tree->children[i]->t1, tree->children[i]->t2))
     {
       if(player == 1)
         tree->children[i]->value = -10;
@@ -136,8 +136,6 @@ int game(size_t lines, size_t cols)
       {
         valid = 1;
         struct tree *tree = malloc(sizeof(struct tree));
-        struct Tuple *tup = malloc(sizeof(struct Tuple));
-        tree->Tuple = tup;
         tree->value = 0;
 
         treeScore(tree, mat, player, cpt);
@@ -147,8 +145,8 @@ int game(size_t lines, size_t cols)
 
         if(treePos->value == 10)
           printf("It is my win :P \n");
-        lines = treePos->Tuple->t1;
-        cols = treePos->Tuple->t2;
+        lines = treePos->t1;
+        cols = treePos->t2;
         printf("%zu |", lines);
         printf("%zu\n", cols);
 
