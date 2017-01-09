@@ -13,6 +13,7 @@ void addChildren(struct tree *tree, struct vector *vect)
     tree->children[i]->value = 0;
     tree->children[i]->t1 = vect->data[i]->t1;
     tree->children[i]->t2 = vect->data[i]->t2;
+//    printf("gain->%lf, t1->%zu t2->%zu\n", tree->children[i]->value, tree->children[i]->t1, tree->children[i]->t2);
   }
 }
 

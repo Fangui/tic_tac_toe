@@ -48,8 +48,14 @@ void addToken(struct matrix *mat, size_t lines, size_t cols, int player)
   mat->data[lines * mat->lines + cols] = player;
 }
 
-void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt)
+void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt, int depth, int max_depth)
 {
+  if(depth >= max_depth)
+  {
+    tree->nbChildren = 0;
+    return;
+  }
+
   if(player == 3)
     player = 1;
 
@@ -73,6 +79,7 @@ void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt)
 
       freeMat(cl);
       freeVect(freePos);
+//      printf("gain->%lf, t1->%zu t2->%zu\n", tree->value, tree->t1, tree->t2);
       return;
     }
     freeMat(cl);
@@ -99,9 +106,7 @@ void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt)
         tree->children[i]->nbChildren = 0;
       }
       else if(cpt > 1)
-         treeScore(tree->children[i], clone, player + 1, cpt - 1);
-         
-     
+         treeScore(tree->children[i], clone, player + 1, cpt - 1, depth + 1, max_depth);
     }
     freeMat(clone);
   }
@@ -110,9 +115,14 @@ void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt)
 
 int game(size_t lines, size_t cols)
 {
-  int player = 0, valid = 0, win = 0;
+  int player = 0, valid = 0, win = 0, max_depth = 0;
   printf("Player first?(1 or 2) : ");
   scanf("%d", &player);
+  printf("Coup prévu en avance ? : ");
+  scanf("%d", &max_depth);
+
+  if(max_depth < 1)
+    max_depth = 1; 
   
   struct matrix *mat = malloc(sizeof(struct matrix));
   mat = newMat(mat, lines, cols);
@@ -161,7 +171,7 @@ int game(size_t lines, size_t cols)
         struct tree *tree = malloc(sizeof(struct tree));
         tree->value = 0;
 
-        treeScore(tree, mat, player, cpt);
+        treeScore(tree, mat, player, cpt, 0, max_depth);
 
         minimax(tree, 0, -150, 150);
         struct tree *treePos = getTuple(tree);
