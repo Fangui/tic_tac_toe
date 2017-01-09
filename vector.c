@@ -39,23 +39,3 @@ void freeVect(struct vector *vect)
   free(vect->data);
   free(vect);
 }
-/*
-struct vector *getFreePos(struct matrix *mat, size_t capacity)
-{
-  struct vector *freePos = vector_make(capacity);
-  for(size_t i = 0; i < mat->lines; ++i)
-  {
-    for(size_t j = 0; j < mat->cols; ++j)
-    {
-      if(mat->data[i * mat->cols + j] == 0)
-      {
-        struct Tuple *Tuple = malloc(sizeof(struct Tuple));
-        Tuple->t1 = i;
-        Tuple->t2 = j;
-        vector_push_back(freePos, Tuple);
-      }
-    }
-  }
-  return freePos;
-}
-*/

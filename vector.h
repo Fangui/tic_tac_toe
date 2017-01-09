@@ -25,6 +25,5 @@ void vector_extract_at(struct vector *vect, size_t pos);
 
 void freeVect(struct vector *vect);
 
-//struct vector *getFreePos(struct matrix *mat, size_t capacity);
 
 # endif

@@ -48,35 +48,37 @@ void addToken(struct matrix *mat, size_t lines, size_t cols, int player)
   mat->data[lines * mat->lines + cols] = player;
 }
 
-void treeScore(struct tree *tree,struct matrix *mat, int player)
+void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt)
 {
   if(player == 3)
     player = 1;
 
-  struct vector *freePos = getFreePos(mat, tree->nbChildren);
+  struct vector *freePos = getFreePos(mat, cpt);
   addChildren(tree, freePos);
 
-  for(size_t cpt = 0; cpt < tree->nbChildren; ++cpt)
+  for(size_t i = 0; i < tree->nbChildren; ++i)
   {
     struct matrix *clone = cloneMat(mat);
-    clone->data[tree->children[cpt]->Tuple->t1 * clone->cols + tree->children[cpt]->Tuple->t2] = player;
-    if(is_Finish(clone, player, tree->children[cpt]->Tuple->t1, tree->children[cpt]->Tuple->t2))
+    clone->data[tree->children[i]->Tuple->t1 * clone->cols + tree->children[i]->Tuple->t2] = player;
+    if(is_Finish(clone, player, tree->children[i]->Tuple->t1, tree->children[i]->Tuple->t2))
     {
       if(player == 1)
-      
-        tree->children[cpt]->value = -10;
+        tree->children[i]->value = -10;
       else
-        tree->children[cpt]->value = 10;
-      for(size_t i = 0; i < tree->children[cpt]->nbChildren; ++i)
-        freeTree(tree->children[cpt]->children[i]);
-      tree->children[cpt]->nbChildren = 0;
+        tree->children[i]->value = 10;
+      tree->children[i]->nbChildren = 0;
     }
     else
     {
-      if(tree->nbChildren == 1)
-        tree->children[cpt]->value = 0;
-      else
-       treeScore(tree->children[cpt], clone, player + 1);
+      if(cpt == 1)
+      {
+        tree->children[i]->value = 0;
+        tree->children[i]->nbChildren = 0;
+      }
+      else if(cpt > 1)
+         treeScore(tree->children[i], clone, player + 1, cpt - 1);
+         
+     
     }
     freeMat(clone);
   }
@@ -133,8 +135,12 @@ int game(size_t lines, size_t cols)
       else
       {
         valid = 1;
-        struct tree *tree = buildTree(cpt);
-        treeScore(tree, mat, player);
+        struct tree *tree = malloc(sizeof(struct tree));
+        struct Tuple *tup = malloc(sizeof(struct Tuple));
+        tree->Tuple = tup;
+        tree->value = 0;
+
+        treeScore(tree, mat, player, cpt);
 
         minimax(tree, 0, -150, 150);
         struct tree *treePos = getTuple(tree);
