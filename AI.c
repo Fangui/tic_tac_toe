@@ -79,6 +79,8 @@ struct vector *getFreePos(struct matrix *mat, size_t capacity)
 
 struct tree *getTuple(struct tree *tree)
 {
+  if(tree->nbChildren == 0)
+    return tree;
   struct tree *curr = tree->children[0];
 
   for(size_t i = 1; i < tree->nbChildren; ++i)

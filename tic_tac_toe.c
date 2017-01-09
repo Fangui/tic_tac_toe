@@ -54,6 +54,29 @@ void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt)
     player = 1;
 
   struct vector *freePos = getFreePos(mat, cpt);
+
+  for(size_t i = 0; i < cpt; ++i)
+  {
+    struct matrix *cl = cloneMat(mat);
+    addToken(cl, freePos->data[i]->t1, freePos->data[i]->t2, player);
+
+    if(is_Finish(cl, player, freePos->data[i]->t1, freePos->data[i]->t2))
+    {
+      tree->nbChildren = 0;
+      if(player == 1)
+        tree->value = -10;
+      else
+        tree->value = 10;
+
+      tree->t1 = freePos->data[i]->t1;
+      tree->t2 = freePos->data[i]->t2;
+
+      freeMat(cl);
+      freeVect(freePos);
+      return;
+    }
+    freeMat(cl);
+  }
   addChildren(tree, freePos);
 
   for(size_t i = 0; i < tree->nbChildren; ++i)
