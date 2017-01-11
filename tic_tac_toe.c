@@ -48,7 +48,8 @@ void addToken(struct matrix *mat, size_t lines, size_t cols, int player)
   mat->data[lines * mat->lines + cols] = player;
 }
 
-void treeScore(struct tree *tree,struct matrix *mat, int player, size_t cpt, int depth, int max_depth)
+void treeScore(struct tree *tree, struct matrix *mat, int player, size_t cpt, 
+               int depth, int max_depth)
 {
   if(depth >= max_depth)
   {
@@ -150,9 +151,9 @@ int game(size_t lines, size_t cols)
     if(player == 3)
       player = 1;
 
-    while(valid == 0)
+    if(player == 1)
     {
-      if(player == 1)
+      while(valid == 0)
       {
         printf("lines : ");
         scanf("%zu", &lines);
@@ -165,40 +166,37 @@ int game(size_t lines, size_t cols)
         else
           valid = 1;
       }
-      else
-      {
-        valid = 1;
-        struct tree *tree = malloc(sizeof(struct tree));
-        tree->value = 0;
+    }
+    else
+    {
+      struct tree *tree = malloc(sizeof(struct tree));
+      tree->value = 0;
 
-        treeScore(tree, mat, player, cpt, 0, max_depth);
+      treeScore(tree, mat, player, cpt, 0, max_depth);
 
-        minimax(tree, 0, -150, 150);
-        struct tree *treePos = getTuple(tree);
+      minimax(tree, 0, -150, 150);
+      struct tree *treePos = getTuple(tree);
 
-        if(treePos->value == 10)
-          printf("It is my win :P \n");
-        lines = treePos->t1;
-        cols = treePos->t2;
-        printf("%zu |", lines);
-        printf("%zu\n", cols);
+      if(treePos->value == 10)
+        printf("It is my win :P \n");
+      lines = treePos->t1;
+      cols = treePos->t2;
+      printf("%zu |", lines);
+      printf("%zu\n", cols);
 
-        freeTree(tree);
-      }
-      if(valid)
-      {
-        addToken(mat, lines, cols, player);
-        printf("\n");
-        printMat(mat);
-        win = is_Finish(mat, player, lines, cols);
-        if(win != 0)
-        {
-          freeMat(mat);
-          return player;
-        }
-      }
+      freeTree(tree);
+    }
+    addToken(mat, lines, cols, player);
+    printf("\n");
+    printMat(mat);
+    win = is_Finish(mat, player, lines, cols);
+    if(win != 0)
+    {
+      freeMat(mat);
+      return player;
     }
   }
+
   freeMat(mat);
   return win;
 }
