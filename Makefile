@@ -1,17 +1,23 @@
 CC=gcc
-CPPFLAGS=
-CFLAGS= -Wall -Wextra -std=c99 -g -o tic_tac_toe
-LDFLAGS=
-LDLIBS=
  
-SRC= tic_tac_toe.c tree.c vector.c matrix.c AI.c
+CPPFLAGS= 
 
-OBJ= ${SRC:.c=.o} 
-all: tic_tac_toe
+CFLAGS= -Wall -Wextra -Werror -std=c99 -pedantic -o -O2 
+LDFLAGS=
+LDLIBS= -lm
 
-tic_tac_toe: ${OBJ} 
+SRC= matrix.c vector.c AI.c tree.c tic_tac_toe.c
+
+OBJ= ${SRC:.c=.o}
+ 
+all: main
+ 
+main: ${OBJ}
  
 clean:
 	rm -f ${OBJ}
-	rm -f *.o
-	rm tic_tac_toe
+	rm -f main
+	rm -f .*.swp
+	clear
+
+# END

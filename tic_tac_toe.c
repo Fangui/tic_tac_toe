@@ -1,5 +1,4 @@
-# include <time.h>
-# include "AI.h"
+# include "tic_tac_toe.h"
 
 int check_lines(struct matrix *mat, size_t lines, int player)
 {
@@ -202,16 +201,4 @@ int game(size_t lines, size_t cols)
   freeMat(mat);
   return win;
 }
-int main()
-{
-  size_t lines = 3, cols = lines;
-  int win = game(lines, cols);
-  if(win == 0)
-    printf("It is a draw\n");
-  else
-    printf("Joueur %d win\n", win);
-  return 0;
-}
-
-
 
